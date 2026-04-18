@@ -252,7 +252,7 @@
         .habit-card p { font-size: 0.75rem; color: #92400e; }
         .habit-bonus { font-size: 1.2rem; font-weight: bold; color: #d97706; }
 
-        /* ПОДВАЛ — теперь внутри main-content и выглядит как часть контента */
+        /* ПОДВАЛ — контрастный */
         .footer {
             background: #fff;
             border: 1px solid #e2e8f0;
@@ -270,12 +270,12 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #64748b;
+            color: #1e293b;
             margin-bottom: 16px;
         }
         .footer-col p, .footer-col a {
             font-size: 0.8rem;
-            color: #94a3b8;
+            color: #475569;
             text-decoration: none;
             line-height: 1.8;
             transition: color 0.2s;
@@ -286,7 +286,7 @@
             padding: 12px 16px;
             border-radius: 12px;
             font-size: 0.8rem;
-            color: #1e2a3e;
+            color: #1e293b;
             margin-top: 8px;
             border-left: 3px solid #3B82F6;
         }
@@ -295,8 +295,16 @@
             padding-top: 24px;
             margin-top: 24px;
             border-top: 1px solid #e2e8f0;
-            font-size: 0.7rem;
-            color: #94a3b8;
+            font-size: 0.75rem;
+            color: #475569;
+        }
+        .footer-bottom span {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .footer-bottom span:hover {
+            opacity: 1;
         }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
@@ -386,7 +394,7 @@
                 <div class="habit-bonus">+15-30</div>
             </div>
 
-            <!-- ПОДВАЛ (теперь внутри main-content, в стиле сайта) -->
+            <!-- ПОДВАЛ (контрастный) -->
             <div class="footer">
                 <div class="footer-container">
                     <div class="footer-col">
@@ -411,7 +419,7 @@
                     </div>
                 </div>
                 <div class="footer-bottom">
-                    <span id="easterEggTrigger" style="cursor: pointer; opacity: 0.5;">Python 3.12 — язык, который объединяет мир</span>
+                    <span id="easterEggTrigger">Python 3.12 — язык, который объединяет мир</span>
                 </div>
             </div>
         </main>
