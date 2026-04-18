@@ -341,40 +341,41 @@
             }
         });
 
-        // Регистрация
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regConfirm').value;
+        // Регистрация (исправленная)
+registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirm').value;
 
-            if (password !== confirm) {
-                authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Пароли не совпадают';
-                authMessage.className = 'message error';
-                return;
-            }
-            if (password.length < 6) {
-                authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Пароль должен быть минимум 6 символов';
-                authMessage.className = 'message error';
-                return;
-            }
+    if (password !== confirm) {
+        authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Пароли не совпадают';
+        authMessage.className = 'message error';
+        return;
+    }
+    if (password.length < 6) {
+        authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Пароль должен быть минимум 6 символов';
+        authMessage.className = 'message error';
+        return;
+    }
 
-            authMessage.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Регистрация...';
-            authMessage.className = 'message';
+    authMessage.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Регистрация...';
+    authMessage.className = 'message';
 
-            try {
-                const userCred = await createUserWithEmailAndPassword(auth, email, password);
-                const initialData = getInitialUserData();
-                await setDoc(doc(db, 'users', userCred.user.uid), initialData);
-                window.location.href = 'dashboard.html';
-            } catch (error) {
-                let errorText = 'Ошибка регистрации';
-                if (error.code === 'auth/email-already-in-use') errorText = 'Email уже используется';
-                if (error.code === 'auth/invalid-email') errorText = 'Неверный формат email';
-                authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + errorText;
-                authMessage.className = 'message error';
-            }
-        });
+    try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        // Используем setDoc, а не updateDoc!
+        const initialData = getInitialUserData();
+        await setDoc(doc(db, 'users', userCred.user.uid), initialData);
+        window.location.href = 'dashboard.html';
+    } catch (error) {
+        let errorText = 'Ошибка регистрации';
+        if (error.code === 'auth/email-already-in-use') errorText = 'Email уже используется';
+        if (error.code === 'auth/invalid-email') errorText = 'Неверный формат email';
+        authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + errorText;
+        authMessage.className = 'message error';
+    }
+});
 
         // Восстановление пароля
         document.getElementById('forgotPassword')?.addEventListener('click', async (e) => {
