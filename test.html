@@ -225,7 +225,7 @@
 
 <script type="module">
     import { auth, db, doc, getDoc, updateDoc, onAuthStateChanged } from './firebase-config.js';
-    import { getTestByModule, calculateScore, getPercentage } from './tests.js';
+    import { getTestByModule, calculateScore } from './tests.js';
 
     const urlParams = new URLSearchParams(window.location.search);
     const moduleId = urlParams.get('module') || 'A1';
@@ -254,15 +254,12 @@
 
     function loadQuestion(index) {
         const q = questions[index];
-        if (!q) {
-            console.error('Вопрос не найден:', index);
-            return;
-        }
+        if (!q) return;
         const container = document.getElementById('questionContainer');
         container.innerHTML = `
             <div class="question">
                 <h3>Вопрос ${index + 1} из ${questions.length}</h3>
-                <p style="margin-bottom: 20px;">${q.text}</p>
+                <p>${q.text}</p>
                 <div class="options">
                     ${q.options.map((opt, i) => `
                         <label class="option">
@@ -277,8 +274,9 @@
         document.getElementById('testProgress').style.width = `${progress}%`;
         document.getElementById('prevBtn').disabled = index === 0;
         
-        const answeredCount = userAnswers.filter(a => a !== null).length;
-        if (answeredCount === questions.length) {
+        // Исправление: на последнем вопросе показываем "Завершить тест"
+        const isLastQuestion = index === questions.length - 1;
+        if (isLastQuestion) {
             document.getElementById('nextBtn').style.display = 'none';
             document.getElementById('submitBtn').style.display = 'block';
         } else {
@@ -327,11 +325,11 @@
             await updateDoc(doc(db, 'users', currentUser.uid), { totalScore: userData.totalScore });
             resultDiv.innerHTML = `
                 <div class="result-success">
-                    <i class="fas fa-trophy" style="font-size:3rem; color:#f59e0b;"></i>
-                    <h2 style="margin:16px 0;">Поздравляем!</h2>
+                    <i class="fas fa-trophy" style="font-size:3rem;"></i>
+                    <h2>Поздравляем!</h2>
                     <p>Вы набрали ${correct}/${questions.length} (${percent}%)</p>
                     <p>Модуль ${moduleId} пройден! +100 очков</p>
-                    <button class="btn" id="continueBtn" style="margin-top:20px;">Продолжить</button>
+                    <button class="btn" id="continueBtn">Продолжить</button>
                 </div>
             `;
             document.getElementById('continueBtn').onclick = () => window.location.href = 'dashboard.html';
@@ -339,10 +337,10 @@
             resultDiv.innerHTML = `
                 <div class="result-fail">
                     <i class="fas fa-sad-tear" style="font-size:3rem;"></i>
-                    <h2 style="margin:16px 0;">Нужно подтянуть знания</h2>
+                    <h2>Нужно подтянуть знания</h2>
                     <p>Вы набрали ${correct}/${questions.length} (${percent}%)</p>
                     <p>Нужно 70% для прохождения модуля</p>
-                    <button class="btn" id="retryBtn" style="margin-top:20px;">Попробовать снова</button>
+                    <button class="btn" id="retryBtn">Попробовать снова</button>
                 </div>
             `;
             document.getElementById('retryBtn').onclick = () => window.location.reload();
@@ -357,8 +355,6 @@
         userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, modulesUnlocked: 1, energy: 5, lives: 7 };
         document.getElementById('testTitle').innerHTML = `Тест модуля ${moduleId}`;
         await updateUI();
-        
-        // ✅ ГЛАВНОЕ: загружаем первый вопрос
         loadQuestion(0);
     });
 
