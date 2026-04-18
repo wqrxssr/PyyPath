@@ -6,7 +6,9 @@ import {
     createUserWithEmailAndPassword, 
     sendPasswordResetEmail,
     onAuthStateChanged,
-    signOut
+    signOut,
+    EmailAuthProvider,
+    reauthenticateWithCredential
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { 
     getFirestore, 
@@ -40,7 +42,9 @@ export {
     setDoc,
     getDoc,
     updateDoc,
-    deleteDoc
+    deleteDoc,
+    EmailAuthProvider,
+    reauthenticateWithCredential
 };
 
 export const getInitialUserData = () => ({

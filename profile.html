@@ -340,7 +340,18 @@
 </div>
 
 <script type="module">
-    import { auth, db, doc, getDoc, updateDoc, signOut, onAuthStateChanged, deleteDoc } from './firebase-config.js';
+    import { 
+        auth, 
+        db, 
+        doc, 
+        getDoc, 
+        updateDoc, 
+        signOut, 
+        onAuthStateChanged, 
+        deleteDoc,
+        EmailAuthProvider,
+        reauthenticateWithCredential
+    } from './firebase-config.js';
 
     let currentUser = null;
     let userData = null;
@@ -416,7 +427,7 @@
         }
     }
 
-    // Функция удаления аккаунта
+    // Функция удаления аккаунта (исправленная)
     async function deleteAccount() {
         if (!currentUser) return;
         
@@ -437,9 +448,9 @@
             deleteBtn.textContent = "Удаление...";
             deleteBtn.disabled = true;
             
-            // Переавторизация
-            const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password);
-            await currentUser.reauthenticateWithCredential(credential);
+            // Переавторизация через импортированные функции
+            const credential = EmailAuthProvider.credential(currentUser.email, password);
+            await reauthenticateWithCredential(currentUser, credential);
             
             // Удаляем документ из Firestore
             await deleteDoc(doc(db, 'users', currentUser.uid));
