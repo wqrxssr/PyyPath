@@ -222,6 +222,8 @@
         .btn:hover { background: #2563eb; transform: translateY(-1px); }
         .btn-danger { background: #ef4444; }
         .btn-danger:hover { background: #dc2626; }
+        .btn-warning { background: #f59e0b; }
+        .btn-warning:hover { background: #d97706; }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
             .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
@@ -331,13 +333,14 @@
 
             <button class="btn" id="certBtn">Скачать сертификат</button>
             <button class="btn btn-danger" id="resetBtn">Сбросить прогресс</button>
+            <button class="btn btn-warning" id="deleteAccountBtn">Удалить аккаунт</button>
             <button class="btn btn-danger" id="logoutBtn">Выйти</button>
         </div>
     </main>
 </div>
 
 <script type="module">
-    import { auth, db, doc, getDoc, updateDoc, signOut, onAuthStateChanged } from './firebase-config.js';
+    import { auth, db, doc, getDoc, updateDoc, signOut, onAuthStateChanged, deleteDoc } from './firebase-config.js';
 
     let currentUser = null;
     let userData = null;
@@ -413,6 +416,58 @@
         }
     }
 
+    // Функция удаления аккаунта
+    async function deleteAccount() {
+        if (!currentUser) return;
+        
+        const confirmed = confirm(
+            "ВНИМАНИЕ! Это действие навсегда удалит ваш аккаунт и весь прогресс.\n\n" +
+            "Вы уверены, что хотите удалить аккаунт?"
+        );
+        if (!confirmed) return;
+        
+        const password = prompt("Для подтверждения удаления введите ваш пароль:");
+        if (!password) {
+            alert("Удаление отменено");
+            return;
+        }
+        
+        try {
+            // Показываем сообщение о загрузке
+            const deleteBtn = document.getElementById('deleteAccountBtn');
+            const originalText = deleteBtn.textContent;
+            deleteBtn.textContent = "Удаление...";
+            deleteBtn.disabled = true;
+            
+            // 1. Переавторизуемся для подтверждения (нужно для удаления)
+            const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password);
+            await currentUser.reauthenticateWithCredential(credential);
+            
+            // 2. Удаляем документ из Firestore
+            await deleteDoc(doc(db, 'users', currentUser.uid));
+            
+            // 3. Удаляем пользователя из Authentication
+            await currentUser.delete();
+            
+            alert("Аккаунт успешно удалён");
+            window.location.href = 'index.html';
+        } catch (error) {
+            console.error("Ошибка удаления:", error);
+            let errorMessage = "Не удалось удалить аккаунт.";
+            if (error.code === 'auth/wrong-password') {
+                errorMessage = "Неверный пароль. Удаление отменено.";
+            } else if (error.code === 'auth/requires-recent-login') {
+                errorMessage = "Требуется повторный вход. Пожалуйста, выйдите и зайдите снова.";
+            }
+            alert(errorMessage);
+            
+            // Восстанавливаем кнопку
+            const deleteBtn = document.getElementById('deleteAccountBtn');
+            deleteBtn.textContent = "Удалить аккаунт";
+            deleteBtn.disabled = false;
+        }
+    }
+
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = 'index.html'; return; }
         currentUser = user;
@@ -431,10 +486,10 @@
         }
     };
     document.getElementById('certBtn').onclick = () => {
-        if ((userData.totalScore || 0) >= 8000) {
+        if ((userData?.totalScore || 0) >= 8000) {
             alert('СЕРТИФИКАТ\n\nPyPath\n\nПоздравляем с окончанием курса Python!');
         } else {
-            alert('67 Сертификат доступен после достижения 8000 очков');
+            alert('Сертификат доступен после достижения 8000 очков');
         }
     };
     document.getElementById('soundToggle').onchange = async (e) => {
@@ -444,6 +499,10 @@
             await updateDoc(doc(db, 'users', currentUser.uid), { settings: userData.settings });
         }
     };
+    
+    // Кнопка удаления аккаунта
+    document.getElementById('deleteAccountBtn')?.addEventListener('click', deleteAccount);
+    
     document.querySelectorAll('.nav-item').forEach(item => {
         item.onclick = () => {
             const page = item.dataset.page;
