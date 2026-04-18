@@ -15,7 +15,6 @@
         }
         .app-container { display: flex; min-height: 100vh; }
         
-        /* Боковая панель */
         .sidebar {
             width: 260px;
             background: #fff;
@@ -59,11 +58,10 @@
             text-transform: uppercase;
             color: #94a3b8;
             margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
         .hearts { display: flex; gap: 6px; margin-bottom: 8px; }
-        .hearts i { font-size: 1.2rem; }
-        .hearts i.fa-heart { color: #ef4444; }
-        .hearts i.far.fa-heart { color: #e2e8f0; }
+        .hearts i { font-size: 1.2rem; color: #ef4444; }
         .energy-bar {
             background: #e2e8f0;
             border-radius: 10px;
@@ -74,7 +72,6 @@
         .energy-fill { background: #f59e0b; height: 100%; width: 0%; border-radius: 10px; }
         .energy-text { font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; }
 
-        /* Основной контент */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -96,7 +93,6 @@
             font-weight: 600;
             font-size: 0.9rem;
         }
-        .score-badge i { color: #f59e0b; margin-right: 6px; }
         .avatar {
             width: 40px;
             height: 40px;
@@ -118,7 +114,6 @@
         }
         .back-btn:hover { color: #3B82F6; }
 
-        /* Профиль */
         .profile-card {
             background: white;
             border-radius: 24px;
@@ -152,15 +147,20 @@
             padding: 20px;
             text-align: center;
         }
-        .stat-card i { font-size: 1.5rem; margin-bottom: 8px; display: block; }
-        .stat-card i.fa-star { color: #f59e0b; }
-        .stat-card i.fa-check-circle { color: #10b981; }
-        .stat-card i.fa-fire { color: #f97316; }
-        .stat-card i.fa-crown { color: #fbbf24; }
+        .stat-card i { font-size: 1.5rem; margin-bottom: 8px; display: block; color: #3B82F6; }
         .stat-card .value { font-size: 1.5rem; font-weight: 700; margin: 8px 0; }
+        .stat-card .label { font-size: 0.8rem; color: #64748b; }
+        
         .achievements-list {
             text-align: left;
             margin: 24px 0;
+        }
+        .achievements-list h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
         }
         .achievement-item {
             display: flex;
@@ -169,6 +169,11 @@
             padding: 12px 0;
             border-bottom: 1px solid #e2e8f0;
         }
+        .achievement-item .name { font-weight: 500; }
+        .achievement-item .status { font-size: 1.1rem; }
+        .achievement-item .status.completed { color: #10b981; }
+        .achievement-item .status.locked { color: #94a3b8; }
+        
         .setting {
             display: flex;
             justify-content: space-between;
@@ -207,6 +212,7 @@
         }
         input:checked + .slider { background-color: #3B82F6; }
         input:checked + .slider:before { transform: translateX(26px); }
+        
         .btn {
             background: #3B82F6;
             border: none;
@@ -217,9 +223,12 @@
             cursor: pointer;
             width: 100%;
             margin-top: 16px;
+            transition: 0.2s;
         }
+        .btn:hover { background: #2563eb; transform: translateY(-1px); }
         .btn-danger { background: #ef4444; }
         .btn-danger:hover { background: #dc2626; }
+        
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
             .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
@@ -231,17 +240,17 @@
     <aside class="sidebar">
         <div class="logo"><i class="fab fa-python"></i><span>PyPath</span></div>
         <nav>
-            <div class="nav-item" data-page="dashboard"><i class="fas fa-chalkboard-user"></i> Учебный план</div>
-            <div class="nav-item" data-page="shop"><i class="fas fa-store"></i> Магазин</div>
-            <div class="nav-item" data-page="profile"><i class="fas fa-user"></i> Мой профиль</div>
+            <div class="nav-item" data-page="dashboard">Учебный план</div>
+            <div class="nav-item" data-page="shop">Магазин</div>
+            <div class="nav-item" data-page="profile">Мой профиль</div>
         </nav>
         <div class="energy-panel">
-            <div class="title">⚡ Энергия</div>
+            <div class="title">ЭНЕРГИЯ</div>
             <div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div>
             <div class="energy-text"><span id="energyCurrent">5</span><span>/5</span></div>
         </div>
         <div class="lives-panel">
-            <div class="title">❤️ Жизни</div>
+            <div class="title">ЖИЗНИ</div>
             <div class="hearts" id="heartsDisplay"></div>
         </div>
     </aside>
@@ -252,9 +261,9 @@
                 <h1>Мой профиль</h1>
             </div>
             <div class="user-actions">
-                <div class="score-badge"><i class="fas fa-star"></i> <span id="scoreValue">0</span></div>
+                <div class="score-badge"><span id="scoreValue">0</span> очков</div>
                 <div class="avatar" id="avatarBtn">M</div>
-                <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Назад</button>
+                <button class="back-btn" id="backBtn">Назад</button>
             </div>
         </div>
 
@@ -264,32 +273,72 @@
             <p id="rankName" style="color: #3B82F6; margin-bottom: 16px;">Бронзовый код</p>
 
             <div class="stats-grid">
-                <div class="stat-card"><i class="fas fa-star"></i><div class="value" id="totalScore">0</div><span>очков</span></div>
-                <div class="stat-card"><i class="fas fa-check-circle"></i><div class="value" id="lessonsCount">0</div><span>/99 уроков</span></div>
-                <div class="stat-card"><i class="fas fa-fire"></i><div class="value" id="maxStreak">0</div><span>макс. стрейк</span></div>
-                <div class="stat-card"><i class="fas fa-crown"></i><div class="value" id="goldenCrowns">0</div><span>корон</span></div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <div class="value" id="totalScore">0</div>
+                    <div class="label">очков</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="value" id="lessonsCount">0</div>
+                    <div class="label">уроков</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-fire"></i>
+                    <div class="value" id="maxStreak">0</div>
+                    <div class="label">макс. стрейк</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-crown"></i>
+                    <div class="value" id="goldenCrowns">0</div>
+                    <div class="label">корон</div>
+                </div>
             </div>
 
             <div class="achievements-list">
-                <h3 style="margin-bottom: 16px;"><i class="fas fa-medal"></i> Достижения</h3>
-                <div class="achievement-item"><span>📚 10 уроков</span><span id="ach10">○</span></div>
-                <div class="achievement-item"><span>📚 25 уроков</span><span id="ach25">○</span></div>
-                <div class="achievement-item"><span>📚 50 уроков</span><span id="ach50">○</span></div>
-                <div class="achievement-item"><span>🏆 99 уроков</span><span id="ach99">○</span></div>
-                <div class="achievement-item"><span>🔥 7-дневный стрейк</span><span id="achStreak7">○</span></div>
-                <div class="achievement-item"><span>🔥 30-дневный стрейк</span><span id="achStreak30">○</span></div>
-                <div class="achievement-item"><span>👑 Золотая корона</span><span id="achCrown">○</span></div>
-                <div class="achievement-item"><span>🐍 Мастер Python (8000 очков)</span><span id="achMaster">○</span></div>
+                <h3>Достижения</h3>
+                <div class="achievement-item">
+                    <span class="name">10 уроков</span>
+                    <span class="status" id="ach10">○</span>
+                </div>
+                <div class="achievement-item">
+                    <span class="name">25 уроков</span>
+                    <span class="status" id="ach25">○</span>
+                </div>
+                <div class="achievement-item">
+                    <span class="name">50 уроков</span>
+                    <span class="status" id="ach50">○</span>
+                </div>
+                <div class="achievement-item">
+                    <span class="name">99 уроков</span>
+                    <span class="status" id="ach99">○</span>
+                </div>
+                <div class="achievement-item">
+                    <span class="name">7-дневный стрейк</span>
+                    <span class="status" id="achStreak7">○</span>
+                </div>
+                <div class="achievement-item">
+                    <span class="name">30-дневный стрейк</span>
+                    <span class="status" id="achStreak30">○</span>
+                </div>
+                <div class="achievement-item">
+                    <span class="name">Золотая корона</span>
+                    <span class="status" id="achCrown">○</span>
+                </div>
+                <div class="achievement-item">
+                    <span class="name">Мастер Python</span>
+                    <span class="status" id="achMaster">○</span>
+                </div>
             </div>
 
             <div class="setting">
-                <span><i class="fas fa-volume-up"></i> Звуки</span>
+                <span>Звуки</span>
                 <label class="switch"><input type="checkbox" id="soundToggle"><span class="slider"></span></label>
             </div>
 
-            <button class="btn" id="certBtn"><i class="fas fa-download"></i> Скачать сертификат</button>
-            <button class="btn btn-danger" id="resetBtn"><i class="fas fa-trash"></i> Сбросить прогресс</button>
-            <button class="btn btn-danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Выйти</button>
+            <button class="btn" id="certBtn">Скачать сертификат</button>
+            <button class="btn btn-danger" id="resetBtn">Сбросить прогресс</button>
+            <button class="btn btn-danger" id="logoutBtn">Выйти</button>
         </div>
     </main>
 </div>
@@ -301,12 +350,12 @@
     let userData = null;
 
     const ranks = [
-        { name: '🥉 Бронзовый код', min: 0 },
-        { name: '🥈 Серебряный код', min: 500 },
-        { name: '🥇 Золотой код', min: 1500 },
-        { name: '💎 Платиновый код', min: 3000 },
-        { name: '🔥 Алмазный код', min: 5000 },
-        { name: '👑 Мастер Python', min: 8000 }
+        { name: 'Бронзовый код', min: 0 },
+        { name: 'Серебряный код', min: 500 },
+        { name: 'Золотой код', min: 1500 },
+        { name: 'Платиновый код', min: 3000 },
+        { name: 'Алмазный код', min: 5000 },
+        { name: 'Мастер Python', min: 8000 }
     ];
 
     function getRank(score) {
@@ -315,16 +364,26 @@
         return current;
     }
 
+    function updateStatus(elementId, condition) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            el.innerHTML = condition ? '✓' : '○';
+            el.className = `status ${condition ? 'completed' : 'locked'}`;
+        }
+    }
+
     async function updateUI() {
         if (!userData) return;
-        document.getElementById('scoreValue').innerText = userData.totalScore || 0;
-        document.getElementById('totalScore').innerText = userData.totalScore || 0;
+        const score = userData.totalScore || 0;
+        const completed = userData.completedLessons?.length || 0;
+        
+        document.getElementById('scoreValue').innerText = score;
+        document.getElementById('totalScore').innerText = score;
         document.getElementById('maxStreak').innerText = userData.maxStreak || 0;
         document.getElementById('goldenCrowns').innerText = userData.goldenCrowns?.length || 0;
-        const completed = userData.completedLessons?.length || 0;
         document.getElementById('lessonsCount').innerText = `${completed}/99`;
         
-        const rank = getRank(userData.totalScore || 0);
+        const rank = getRank(score);
         document.getElementById('rankName').innerHTML = rank.name;
         
         const energy = userData.energy || 5;
@@ -335,20 +394,19 @@
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let html = '';
-            for (let i = 0; i < Math.min(lives, 7); i++) html += '<i class="fas fa-heart"></i>';
+            for (let i = 0; i < lives; i++) html += '<i class="fas fa-heart"></i>';
             for (let i = lives; i < 7; i++) html += '<i class="far fa-heart"></i>';
             heartsContainer.innerHTML = html;
         }
         
-        // Достижения
-        document.getElementById('ach10').innerHTML = completed >= 10 ? '✅' : '○';
-        document.getElementById('ach25').innerHTML = completed >= 25 ? '✅' : '○';
-        document.getElementById('ach50').innerHTML = completed >= 50 ? '✅' : '○';
-        document.getElementById('ach99').innerHTML = completed >= 99 ? '✅' : '○';
-        document.getElementById('achStreak7').innerHTML = (userData.maxStreak || 0) >= 7 ? '✅' : '○';
-        document.getElementById('achStreak30').innerHTML = (userData.maxStreak || 0) >= 30 ? '✅' : '○';
-        document.getElementById('achCrown').innerHTML = (userData.goldenCrowns?.length || 0) >= 1 ? '✅' : '○';
-        document.getElementById('achMaster').innerHTML = (userData.totalScore || 0) >= 8000 ? '✅' : '○';
+        updateStatus('ach10', completed >= 10);
+        updateStatus('ach25', completed >= 25);
+        updateStatus('ach50', completed >= 50);
+        updateStatus('ach99', completed >= 99);
+        updateStatus('achStreak7', (userData.maxStreak || 0) >= 7);
+        updateStatus('achStreak30', (userData.maxStreak || 0) >= 30);
+        updateStatus('achCrown', (userData.goldenCrowns?.length || 0) >= 1);
+        updateStatus('achMaster', score >= 8000);
         
         if (currentUser?.email) {
             const firstLetter = currentUser.email.charAt(0).toUpperCase();
@@ -370,7 +428,7 @@
     document.getElementById('avatarBtn').onclick = () => window.location.href = 'profile.html';
     document.getElementById('logoutBtn').onclick = async () => { await signOut(auth); window.location.href = 'index.html'; };
     document.getElementById('resetBtn').onclick = async () => {
-        if (confirm('Сбросить весь прогресс? Это действие необратимо!')) {
+        if (confirm('Сбросить весь прогресс? Это действие необратимо.')) {
             const userRef = doc(db, 'users', currentUser.uid);
             await updateDoc(userRef, { totalScore: 0, completedLessons: [], modulesUnlocked: 1, energy: 5, lives: 7, streak: 0, maxStreak: 0, goldenCrowns: [] });
             alert('Прогресс сброшен');
@@ -379,7 +437,7 @@
     };
     document.getElementById('certBtn').onclick = () => {
         if ((userData.totalScore || 0) >= 8000) {
-            alert('🎓 СЕРТИФИКАТ 🎓\n\nPyPath\n\nПоздравляем с окончанием курса Python!\nВы — Мастер Python!');
+            alert('СЕРТИФИКАТ\n\nPyPath\n\nПоздравляем с окончанием курса Python!');
         } else {
             alert('Сертификат доступен после достижения 8000 очков');
         }

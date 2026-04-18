@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -14,6 +14,8 @@
             line-height: 1.5;
         }
         .app-container { display: flex; min-height: 100vh; }
+        
+        /* Боковая панель */
         .sidebar {
             width: 260px;
             background: #fff;
@@ -25,7 +27,14 @@
             display: flex;
             flex-direction: column;
         }
-        .logo { font-size: 1.5rem; font-weight: 700; margin-bottom: 32px; display: flex; align-items: center; gap: 8px; }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
         .logo i { color: #3B82F6; font-size: 1.8rem; }
         .logo span { background: linear-gradient(135deg, #3B82F6, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .nav-item {
@@ -40,6 +49,7 @@
             transition: all 0.2s;
         }
         .nav-item:hover { background: #f1f5f9; }
+        .nav-item.active { background: #eef2ff; color: #3B82F6; font-weight: 500; }
         .energy-panel, .lives-panel {
             margin-top: 24px;
             padding-top: 24px;
@@ -50,11 +60,10 @@
             text-transform: uppercase;
             color: #94a3b8;
             margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
         .hearts { display: flex; gap: 6px; margin-bottom: 8px; }
-        .hearts i { font-size: 1.2rem; }
-        .hearts i.fa-heart { color: #ef4444; }
-        .hearts i.far.fa-heart { color: #e2e8f0; }
+        .hearts i { font-size: 1.2rem; color: #ef4444; }
         .energy-bar {
             background: #e2e8f0;
             border-radius: 10px;
@@ -64,6 +73,8 @@
         }
         .energy-fill { background: #f59e0b; height: 100%; width: 0%; border-radius: 10px; }
         .energy-text { font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; }
+
+        /* Основной контент */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -106,41 +117,59 @@
             font-size: 0.9rem;
         }
         .back-btn:hover { color: #3B82F6; }
+
+        /* Тест */
         .test-card {
             background: white;
             border-radius: 24px;
             padding: 32px;
             border: 1px solid #e2e8f0;
         }
+        .test-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
         .progress-bar-bg {
-            height: 8px;
+            height: 4px;
             background: #e2e8f0;
-            border-radius: 4px;
+            border-radius: 2px;
             margin: 20px 0;
         }
         .progress-fill {
             height: 100%;
             background: #3B82F6;
-            border-radius: 4px;
+            border-radius: 2px;
             width: 0%;
             transition: width 0.3s;
         }
         .question {
-            padding: 20px;
+            padding: 24px;
             background: #f8fafc;
             border-radius: 16px;
             margin: 20px 0;
         }
-        .question h3 { margin-bottom: 16px; }
+        .question h3 { 
+            font-size: 1rem; 
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: #64748b;
+        }
+        .question p { 
+            font-size: 1.1rem; 
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
         .option {
             display: block;
             margin: 12px 0;
-            padding: 12px 16px;
+            padding: 14px 18px;
             background: white;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
             cursor: pointer;
             transition: 0.2s;
+            font-size: 0.95rem;
         }
         .option:hover { border-color: #3B82F6; background: #eff6ff; }
         .test-controls {
@@ -151,27 +180,38 @@
         .btn {
             background: #3B82F6;
             border: none;
-            padding: 12px 24px;
+            padding: 12px 28px;
             border-radius: 40px;
             color: white;
             font-weight: 600;
             cursor: pointer;
+            transition: 0.2s;
         }
+        .btn:hover { background: #2563eb; transform: translateY(-1px); }
         .btn-secondary { background: #94a3b8; }
+        .btn-secondary:hover { background: #64748b; }
         .result-success {
-            background: #dcfce7;
-            border: 1px solid #16a34a;
+            background: #f0fdf4;
+            border: 1px solid #22c55e;
             border-radius: 16px;
             padding: 32px;
             text-align: center;
         }
         .result-fail {
-            background: #fee2e2;
-            border: 1px solid #dc2626;
+            background: #fef2f2;
+            border: 1px solid #ef4444;
             border-radius: 16px;
             padding: 32px;
             text-align: center;
         }
+        .lock-message {
+            text-align: center;
+            padding: 40px;
+            background: #f8fafc;
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+        .lock-message p { margin: 10px 0; color: #64748b; }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
             .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
@@ -183,17 +223,17 @@
     <aside class="sidebar">
         <div class="logo"><i class="fab fa-python"></i><span>PyPath</span></div>
         <nav>
-            <div class="nav-item" data-page="dashboard"><i class="fas fa-chalkboard-user"></i> Учебный план</div>
-            <div class="nav-item" data-page="shop"><i class="fas fa-store"></i> Магазин</div>
-            <div class="nav-item" data-page="profile"><i class="fas fa-user"></i> Мой профиль</div>
+            <div class="nav-item" data-page="dashboard">Учебный план</div>
+            <div class="nav-item" data-page="shop">Магазин</div>
+            <div class="nav-item" data-page="profile">Мой профиль</div>
         </nav>
         <div class="energy-panel">
-            <div class="title">⚡ Энергия</div>
+            <div class="title">ЭНЕРГИЯ</div>
             <div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div>
             <div class="energy-text"><span id="energyCurrent">5</span><span>/5</span></div>
         </div>
         <div class="lives-panel">
-            <div class="title">❤️ Жизни</div>
+            <div class="title">ЖИЗНИ</div>
             <div class="hearts" id="heartsDisplay"></div>
         </div>
     </aside>
@@ -204,21 +244,14 @@
                 <h1 id="testTitle">Тест модуля</h1>
             </div>
             <div class="user-actions">
-                <div class="score-badge"><i class="fas fa-star"></i> <span id="scoreValue">0</span></div>
+                <div class="score-badge"><span id="scoreValue">0</span> очков</div>
                 <div class="avatar" id="avatarBtn">M</div>
-                <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Назад</button>
+                <button class="back-btn" id="backBtn">Назад</button>
             </div>
         </div>
 
         <div class="test-card">
-            <div class="progress-bar-bg"><div class="progress-fill" id="testProgress"></div></div>
-            <div id="questionContainer"></div>
-            <div class="test-controls">
-                <button class="btn btn-secondary" id="prevBtn">◀ Назад</button>
-                <button class="btn" id="nextBtn">Далее ▶</button>
-                <button class="btn" id="submitBtn" style="display:none;">✅ Завершить тест</button>
-            </div>
-            <div id="result"></div>
+            <div id="testContent"></div>
         </div>
     </main>
 </div>
@@ -236,6 +269,17 @@
     let userAnswers = new Array(questions.length).fill(null);
     let currentIndex = 0;
 
+    // Проверка, все ли уроки модуля пройдены
+    function areAllLessonsCompleted() {
+        if (!userData) return false;
+        const completed = userData.completedLessons || [];
+        for (let i = 1; i <= 14; i++) {
+            const lessonId = `${moduleId}_${i}`;
+            if (!completed.includes(lessonId)) return false;
+        }
+        return true;
+    }
+
     async function updateUI() {
         if (!userData) return;
         document.getElementById('scoreValue').innerText = userData.totalScore || 0;
@@ -246,7 +290,7 @@
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let html = '';
-            for (let i = 0; i < Math.min(lives, 7); i++) html += '<i class="fas fa-heart"></i>';
+            for (let i = 0; i < lives; i++) html += '<i class="fas fa-heart"></i>';
             for (let i = lives; i < 7; i++) html += '<i class="far fa-heart"></i>';
             heartsContainer.innerHTML = html;
         }
@@ -256,9 +300,11 @@
         const q = questions[index];
         if (!q) return;
         const container = document.getElementById('questionContainer');
+        if (!container) return;
+        
         container.innerHTML = `
             <div class="question">
-                <h3>Вопрос ${index + 1} из ${questions.length}</h3>
+                <h3>Вопрос ${index + 1} / ${questions.length}</h3>
                 <p>${q.text}</p>
                 <div class="options">
                     ${q.options.map((opt, i) => `
@@ -271,17 +317,23 @@
             </div>
         `;
         const progress = ((index + 1) / questions.length) * 100;
-        document.getElementById('testProgress').style.width = `${progress}%`;
-        document.getElementById('prevBtn').disabled = index === 0;
+        const progressFill = document.getElementById('testProgress');
+        if (progressFill) progressFill.style.width = `${progress}%`;
         
-        // Исправление: на последнем вопросе показываем "Завершить тест"
+        const prevBtn = document.getElementById('prevBtn');
+        if (prevBtn) prevBtn.disabled = index === 0;
+        
         const isLastQuestion = index === questions.length - 1;
-        if (isLastQuestion) {
-            document.getElementById('nextBtn').style.display = 'none';
-            document.getElementById('submitBtn').style.display = 'block';
-        } else {
-            document.getElementById('nextBtn').style.display = 'block';
-            document.getElementById('submitBtn').style.display = 'none';
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        if (nextBtn && submitBtn) {
+            if (isLastQuestion) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
         }
     }
 
@@ -290,72 +342,109 @@
         if (selected) userAnswers[currentIndex] = parseInt(selected.value);
     }
 
-    document.getElementById('nextBtn').onclick = () => {
-        saveCurrentAnswer();
-        if (currentIndex < questions.length - 1) {
-            currentIndex++;
-            loadQuestion(currentIndex);
+    function renderTest() {
+        const container = document.getElementById('testContent');
+        if (!areAllLessonsCompleted()) {
+            container.innerHTML = `
+                <div class="lock-message">
+                    <p>Тест модуля ${moduleId} доступен только после прохождения всех 14 уроков.</p>
+                    <p>Пройдите все уроки модуля, чтобы открыть тест.</p>
+                    <button class="btn" id="toModuleBtn">К списку уроков</button>
+                </div>
+            `;
+            document.getElementById('toModuleBtn')?.addEventListener('click', () => {
+                window.location.href = `module.html?module=${moduleId}`;
+            });
+            return;
         }
-    };
-    document.getElementById('prevBtn').onclick = () => {
-        saveCurrentAnswer();
-        if (currentIndex > 0) {
-            currentIndex--;
-            loadQuestion(currentIndex);
-        }
-    };
-    document.getElementById('submitBtn').onclick = async () => {
-        saveCurrentAnswer();
-        const correct = calculateScore(moduleId, userAnswers);
-        const percent = (correct / questions.length) * 100;
-        const passed = percent >= 70;
-        const resultDiv = document.getElementById('result');
-        resultDiv.style.display = 'block';
-        document.getElementById('questionContainer').style.display = 'none';
-        document.querySelector('.test-controls').style.display = 'none';
         
-        if (passed) {
-            const modulesOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'C3'];
-            const currentIdx = modulesOrder.indexOf(moduleId);
-            if (currentIdx + 1 >= (userData.modulesUnlocked || 1)) {
-                userData.modulesUnlocked = currentIdx + 2;
-                await updateDoc(doc(db, 'users', currentUser.uid), { modulesUnlocked: userData.modulesUnlocked });
+        container.innerHTML = `
+            <div class="test-header">
+                <div class="progress-bar-bg"><div class="progress-fill" id="testProgress"></div></div>
+            </div>
+            <div id="questionContainer"></div>
+            <div class="test-controls">
+                <button class="btn btn-secondary" id="prevBtn">Назад</button>
+                <button class="btn" id="nextBtn">Далее</button>
+                <button class="btn" id="submitBtn" style="display:none;">Завершить тест</button>
+            </div>
+            <div id="result"></div>
+        `;
+        
+        loadQuestion(0);
+        
+        document.getElementById('nextBtn')?.addEventListener('click', () => {
+            saveCurrentAnswer();
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                loadQuestion(currentIndex);
             }
-            userData.totalScore = (userData.totalScore || 0) + 100;
-            await updateDoc(doc(db, 'users', currentUser.uid), { totalScore: userData.totalScore });
-            resultDiv.innerHTML = `
-                <div class="result-success">
-                    <i class="fas fa-trophy" style="font-size:3rem;"></i>
-                    <h2>Поздравляем!</h2>
-                    <p>Вы набрали ${correct}/${questions.length} (${percent}%)</p>
-                    <p>Модуль ${moduleId} пройден! +100 очков</p>
-                    <button class="btn" id="continueBtn">Продолжить</button>
-                </div>
-            `;
-            document.getElementById('continueBtn').onclick = () => window.location.href = 'dashboard.html';
-        } else {
-            resultDiv.innerHTML = `
-                <div class="result-fail">
-                    <i class="fas fa-sad-tear" style="font-size:3rem;"></i>
-                    <h2>Нужно подтянуть знания</h2>
-                    <p>Вы набрали ${correct}/${questions.length} (${percent}%)</p>
-                    <p>Нужно 70% для прохождения модуля</p>
-                    <button class="btn" id="retryBtn">Попробовать снова</button>
-                </div>
-            `;
-            document.getElementById('retryBtn').onclick = () => window.location.reload();
-        }
-    };
+        });
+        
+        document.getElementById('prevBtn')?.addEventListener('click', () => {
+            saveCurrentAnswer();
+            if (currentIndex > 0) {
+                currentIndex--;
+                loadQuestion(currentIndex);
+            }
+        });
+        
+        document.getElementById('submitBtn')?.addEventListener('click', async () => {
+            saveCurrentAnswer();
+            const correct = calculateScore(moduleId, userAnswers);
+            const percent = (correct / questions.length) * 100;
+            const passed = percent >= 70;
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            document.getElementById('questionContainer').style.display = 'none';
+            const controls = document.querySelector('.test-controls');
+            if (controls) controls.style.display = 'none';
+            
+            if (passed) {
+                const modulesOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'C3'];
+                const currentIdx = modulesOrder.indexOf(moduleId);
+                if (currentIdx + 1 >= (userData.modulesUnlocked || 1)) {
+                    userData.modulesUnlocked = currentIdx + 2;
+                    await updateDoc(doc(db, 'users', currentUser.uid), { modulesUnlocked: userData.modulesUnlocked });
+                }
+                userData.totalScore = (userData.totalScore || 0) + 100;
+                await updateDoc(doc(db, 'users', currentUser.uid), { totalScore: userData.totalScore });
+                resultDiv.innerHTML = `
+                    <div class="result-success">
+                        <h2>Поздравляем!</h2>
+                        <p>Вы набрали ${correct}/${questions.length} (${percent}%)</p>
+                        <p>Модуль ${moduleId} пройден. +100 очков</p>
+                        <button class="btn" id="continueBtn">К учебному плану</button>
+                    </div>
+                `;
+                document.getElementById('continueBtn')?.addEventListener('click', () => {
+                    window.location.href = 'dashboard.html';
+                });
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result-fail">
+                        <h2>Недостаточно баллов</h2>
+                        <p>Вы набрали ${correct}/${questions.length} (${percent}%)</p>
+                        <p>Требуется 70% для прохождения модуля</p>
+                        <button class="btn" id="retryBtn">Пройти тест снова</button>
+                    </div>
+                `;
+                document.getElementById('retryBtn')?.addEventListener('click', () => {
+                    window.location.reload();
+                });
+            }
+        });
+    }
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = 'index.html'; return; }
         currentUser = user;
         const userRef = doc(db, 'users', user.uid);
         const userSnap = await getDoc(userRef);
-        userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, modulesUnlocked: 1, energy: 5, lives: 7 };
+        userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, modulesUnlocked: 1, energy: 5, lives: 7, completedLessons: [] };
         document.getElementById('testTitle').innerHTML = `Тест модуля ${moduleId}`;
         await updateUI();
-        loadQuestion(0);
+        renderTest();
     });
 
     document.getElementById('backBtn').onclick = () => window.location.href = `module.html?module=${moduleId}`;

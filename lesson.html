@@ -14,8 +14,6 @@
             line-height: 1.5;
         }
         .app-container { display: flex; min-height: 100vh; }
-        
-        /* Боковая панель (как на dashboard) */
         .sidebar {
             width: 260px;
             background: #fff;
@@ -27,14 +25,7 @@
             display: flex;
             flex-direction: column;
         }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .logo { font-size: 1.5rem; font-weight: 700; margin-bottom: 32px; display: flex; align-items: center; gap: 8px; }
         .logo i { color: #3B82F6; font-size: 1.8rem; }
         .logo span { background: linear-gradient(135deg, #3B82F6, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .nav-item {
@@ -59,11 +50,10 @@
             text-transform: uppercase;
             color: #94a3b8;
             margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
         .hearts { display: flex; gap: 6px; margin-bottom: 8px; }
-        .hearts i { font-size: 1.2rem; }
-        .hearts i.fa-heart { color: #ef4444; }
-        .hearts i.far.fa-heart { color: #e2e8f0; }
+        .hearts i { font-size: 1.2rem; color: #ef4444; }
         .energy-bar {
             background: #e2e8f0;
             border-radius: 10px;
@@ -73,8 +63,6 @@
         }
         .energy-fill { background: #f59e0b; height: 100%; width: 0%; border-radius: 10px; }
         .energy-text { font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; }
-
-        /* Основной контент */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -138,6 +126,8 @@
             border-radius: 12px;
             overflow-x: auto;
             margin: 16px 0;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 0.85rem;
         }
         .theory code {
             background: #e2e8f0;
@@ -163,22 +153,61 @@
             margin: 16px 0;
         }
         .task-hint {
-            background: #fef3c7;
+            background: #fffbeb;
+            border-left: 3px solid #f59e0b;
             padding: 16px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin: 16px 0;
             color: #92400e;
         }
-        textarea {
-            width: 100%;
-            padding: 16px;
-            background: #0f172a;
-            color: #e2e8f0;
-            border: 1px solid #334155;
+        /* IDE-стиль для поля ввода кода */
+        .code-editor {
+            background: #1e1e2e;
             border-radius: 12px;
+            overflow: hidden;
+            margin: 16px 0;
+            border: 1px solid #334155;
+        }
+        .code-editor-header {
+            background: #2a2a3a;
+            padding: 10px 16px;
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid #3a3a4a;
+        }
+        .code-editor-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff5f56;
+        }
+        .code-editor-dot:nth-child(2) { background: #ffbd2e; }
+        .code-editor-dot:nth-child(3) { background: #27c93f; }
+        .code-editor-title {
+            margin-left: 12px;
+            color: #a0a0b0;
+            font-size: 0.75rem;
             font-family: monospace;
-            font-size: 0.9rem;
+        }
+        .code-editor textarea {
+            width: 100%;
+            padding: 20px;
+            background: #1e1e2e;
+            color: #e2e8f0;
+            border: none;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
             resize: vertical;
+            outline: none;
+        }
+        .checkbox-options label, .explain-options label {
+            display: block;
+            margin: 10px 0;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            cursor: pointer;
         }
         .btn {
             background: #3B82F6;
@@ -190,24 +219,15 @@
             cursor: pointer;
             margin-top: 20px;
         }
-        .btn-primary { background: #3B82F6; }
-        .btn-success { background: #10b981; }
+        .btn:hover { background: #2563eb; transform: translateY(-1px); }
         .message {
             margin-top: 20px;
             padding: 12px;
             border-radius: 12px;
             text-align: center;
         }
-        .message.error { background: #fee2e2; color: #dc2626; }
-        .message.success { background: #dcfce7; color: #16a34a; }
-        .checkbox-options label, .explain-options label {
-            display: block;
-            margin: 10px 0;
-            padding: 12px;
-            background: #f1f5f9;
-            border-radius: 12px;
-            cursor: pointer;
-        }
+        .message.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .message.success { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
             .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
@@ -219,17 +239,17 @@
     <aside class="sidebar">
         <div class="logo"><i class="fab fa-python"></i><span>PyPath</span></div>
         <nav>
-            <div class="nav-item" data-page="dashboard"><i class="fas fa-chalkboard-user"></i> Учебный план</div>
-            <div class="nav-item" data-page="shop"><i class="fas fa-store"></i> Магазин</div>
-            <div class="nav-item" data-page="profile"><i class="fas fa-user"></i> Мой профиль</div>
+            <div class="nav-item" data-page="dashboard">Учебный план</div>
+            <div class="nav-item" data-page="shop">Магазин</div>
+            <div class="nav-item" data-page="profile">Мой профиль</div>
         </nav>
         <div class="energy-panel">
-            <div class="title">⚡ Энергия</div>
+            <div class="title">ЭНЕРГИЯ</div>
             <div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div>
             <div class="energy-text"><span id="energyCurrent">5</span><span>/5</span></div>
         </div>
         <div class="lives-panel">
-            <div class="title">❤️ Жизни</div>
+            <div class="title">ЖИЗНИ</div>
             <div class="hearts" id="heartsDisplay"></div>
         </div>
     </aside>
@@ -240,17 +260,17 @@
                 <h1 id="lessonTitle">Загрузка...</h1>
             </div>
             <div class="user-actions">
-                <div class="score-badge"><i class="fas fa-star"></i> <span id="scoreValue">0</span></div>
+                <div class="score-badge"><span id="scoreValue">0</span> очков</div>
                 <div class="avatar" id="avatarBtn">M</div>
-                <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Назад</button>
+                <button class="back-btn" id="backBtn">Назад</button>
             </div>
         </div>
 
-        <div class="lesson-card" id="lessonContent">
+        <div class="lesson-card">
             <div id="theoryBlock"></div>
             <div class="task-area" id="taskArea" style="display: none;">
                 <div id="taskBlock"></div>
-                <button class="btn btn-primary" id="checkBtn">✅ Проверить</button>
+                <button class="btn" id="checkBtn">Проверить</button>
                 <div id="messageArea" class="message"></div>
             </div>
         </div>
@@ -281,7 +301,7 @@
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let html = '';
-            for (let i = 0; i < Math.min(lives, 7); i++) html += '<i class="fas fa-heart"></i>';
+            for (let i = 0; i < lives; i++) html += '<i class="fas fa-heart"></i>';
             for (let i = lives; i < 7; i++) html += '<i class="far fa-heart"></i>';
             heartsContainer.innerHTML = html;
         }
@@ -296,11 +316,11 @@
 
     async function completeLesson() {
         if (userData.energy <= 0) {
-            showMessage('❌ Недостаточно энергии! Подождите восстановления.', 'error');
+            showMessage('Недостаточно энергии. Подождите восстановления.', 'error');
             return;
         }
         if (userData.completedLessons?.includes(lessonId)) {
-            showMessage('✅ Урок уже пройден!', 'success');
+            showMessage('Урок уже пройден', 'success');
             setTimeout(() => window.location.href = `module.html?module=${moduleId}`, 1500);
             return;
         }
@@ -312,7 +332,7 @@
         const userRef = doc(db, 'users', currentUser.uid);
         await updateDoc(userRef, userData);
         updateUI();
-        showMessage(`🎉 Урок пройден! +10 очков, +1 жизнь!`, 'success');
+        showMessage(`Урок пройден! +10 очков, +1 жизнь`, 'success');
         setTimeout(() => window.location.href = `module.html?module=${moduleId}`, 2000);
     }
 
@@ -327,14 +347,24 @@
         currentTask = getLesson(lessonId);
         const container = document.getElementById('taskBlock');
         container.innerHTML = `
-            <div class="task-description"><strong>📝 Задание:</strong><br>${currentTask.description}</div>
-            <div class="task-requirements"><strong>📋 Требования:</strong><br>${currentTask.requirements.replace(/\n/g, '<br>')}</div>
-            <div class="task-hint"><strong>💡 Подсказка:</strong><br>${currentTask.hint}</div>
+            <div class="task-description"><strong>Задание</strong><br>${currentTask.description}</div>
+            <div class="task-requirements"><strong>Требования</strong><br>${currentTask.requirements.replace(/\n/g, '<br>')}</div>
+            <div class="task-hint"><strong>Подсказка</strong><br>${currentTask.hint}</div>
         `;
         if (currentTask.type === 'code') {
-            container.innerHTML += `<textarea id="answerInput" rows="6" placeholder="Напишите ваш код здесь..."></textarea>`;
+            container.innerHTML += `
+                <div class="code-editor">
+                    <div class="code-editor-header">
+                        <div class="code-editor-dot"></div>
+                        <div class="code-editor-dot"></div>
+                        <div class="code-editor-dot"></div>
+                        <span class="code-editor-title">main.py</span>
+                    </div>
+                    <textarea id="answerInput" rows="8" placeholder="Напишите ваш код здесь..."></textarea>
+                </div>
+            `;
         } else if (currentTask.type === 'fill') {
-            container.innerHTML += `<input type="text" id="answerInput" style="width:100%; padding:12px;" placeholder="Вставьте пропущенное слово">`;
+            container.innerHTML += `<input type="text" id="answerInput" style="width:100%; padding:14px; border-radius:12px; border:1px solid #e2e8f0;" placeholder="Вставьте пропущенное слово">`;
         } else if (currentTask.type === 'checkbox' && currentTask.options) {
             let html = '<div class="checkbox-options">';
             currentTask.options.forEach((opt, idx) => {
@@ -372,9 +402,9 @@
         } else {
             userData.lives = Math.max(0, (userData.lives || 7) - 1);
             updateUI();
-            showMessage(`❌ Неправильно! Осталось жизней: ${userData.lives}`, 'error');
+            showMessage(`Неправильно. Осталось жизней: ${userData.lives}`, 'error');
             if (userData.lives <= 0) {
-                showMessage('💀 Жизни кончились! Возвращаемся к модулю.', 'error');
+                showMessage('Жизни кончились. Возвращаемся к модулю.', 'error');
                 setTimeout(() => window.location.href = `module.html?module=${moduleId}`, 2000);
             }
         }
@@ -396,9 +426,9 @@
     document.querySelectorAll('.nav-item').forEach(item => {
         item.onclick = () => {
             const page = item.dataset.page;
-            if (page === 'profile') window.location.href = 'profile.html';
-            if (page === 'shop') window.location.href = 'shop.html';
             if (page === 'dashboard') window.location.href = 'dashboard.html';
+            if (page === 'shop') window.location.href = 'shop.html';
+            if (page === 'profile') window.location.href = 'profile.html';
         };
     });
 </script>
