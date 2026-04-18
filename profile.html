@@ -433,20 +433,18 @@
         }
         
         try {
-            // Показываем сообщение о загрузке
             const deleteBtn = document.getElementById('deleteAccountBtn');
-            const originalText = deleteBtn.textContent;
             deleteBtn.textContent = "Удаление...";
             deleteBtn.disabled = true;
             
-            // 1. Переавторизуемся для подтверждения (нужно для удаления)
+            // Переавторизация
             const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password);
             await currentUser.reauthenticateWithCredential(credential);
             
-            // 2. Удаляем документ из Firestore
+            // Удаляем документ из Firestore
             await deleteDoc(doc(db, 'users', currentUser.uid));
             
-            // 3. Удаляем пользователя из Authentication
+            // Удаляем пользователя
             await currentUser.delete();
             
             alert("Аккаунт успешно удалён");
@@ -457,11 +455,10 @@
             if (error.code === 'auth/wrong-password') {
                 errorMessage = "Неверный пароль. Удаление отменено.";
             } else if (error.code === 'auth/requires-recent-login') {
-                errorMessage = "Требуется повторный вход. Пожалуйста, выйдите и зайдите снова.";
+                errorMessage = "Требуется повторный вход. Выйдите и зайдите снова.";
             }
             alert(errorMessage);
             
-            // Восстанавливаем кнопку
             const deleteBtn = document.getElementById('deleteAccountBtn');
             deleteBtn.textContent = "Удалить аккаунт";
             deleteBtn.disabled = false;
@@ -500,7 +497,6 @@
         }
     };
     
-    // Кнопка удаления аккаунта
     document.getElementById('deleteAccountBtn')?.addEventListener('click', deleteAccount);
     
     document.querySelectorAll('.nav-item').forEach(item => {

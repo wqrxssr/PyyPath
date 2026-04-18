@@ -13,7 +13,8 @@ import {
     doc, 
     setDoc, 
     getDoc, 
-    updateDoc
+    updateDoc,
+    deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -38,7 +39,8 @@ export {
     doc,
     setDoc,
     getDoc,
-    updateDoc
+    updateDoc,
+    deleteDoc
 };
 
 export const getInitialUserData = () => ({
@@ -63,16 +65,3 @@ export const getInitialUserData = () => ({
     },
     stats: { totalLessonsCompleted: 0, totalEnergyUsed: 0, totalLivesLost: 0, perfectLessons: 0 }
 });
-
-// Функция для создания/получения пользователя
-export async function ensureUserData(userId) {
-    const userRef = doc(db, 'users', userId);
-    const userSnap = await getDoc(userRef);
-    
-    if (!userSnap.exists()) {
-        const initialData = getInitialUserData();
-        await setDoc(userRef, initialData);
-        return initialData;
-    }
-    return userSnap.data();
-}
