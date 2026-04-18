@@ -59,6 +59,11 @@ export const getInitialUserData = () => ({
     streak: 0,
     maxStreak: 0,
     lastLessonDate: null,
+    // ========== НОВЫЕ ПОЛЯ ДЛЯ ПРОБЛЕМЫ ДНЯ ==========
+    lastProblemDate: null,      // дата последней задачи
+    problemSolved: false,       // решена ли задача сегодня
+    currentProblem: null,       // текущая задача дня
+    // ================================================
     settings: { darkMode: true, soundsEnabled: true },
     dailyQuests: {
         date: new Date().toDateString(),
