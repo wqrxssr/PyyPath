@@ -14,8 +14,6 @@
             line-height: 1.5;
         }
         .app-container { display: flex; min-height: 100vh; }
-        
-        /* Боковая панель */
         .sidebar {
             width: 260px;
             background: #fff;
@@ -27,14 +25,7 @@
             display: flex;
             flex-direction: column;
         }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .logo { font-size: 1.5rem; font-weight: 700; margin-bottom: 32px; display: flex; align-items: center; gap: 8px; }
         .logo i { color: #3B82F6; font-size: 1.8rem; }
         .logo span { background: linear-gradient(135deg, #3B82F6, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .nav-item {
@@ -73,8 +64,6 @@
         }
         .energy-fill { background: #f59e0b; height: 100%; width: 0%; border-radius: 10px; }
         .energy-text { font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; }
-
-        /* Основной контент */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -117,8 +106,6 @@
             font-size: 0.9rem;
         }
         .back-btn:hover { color: #3B82F6; }
-
-        /* Тест */
         .test-card {
             background: white;
             border-radius: 24px;
@@ -214,7 +201,7 @@
     <main class="main-content">
         <div class="top-bar">
             <div class="page-title">
-                <h1 id="testTitle">Тест модуля A1</h1>
+                <h1 id="testTitle">Тест модуля</h1>
             </div>
             <div class="user-actions">
                 <div class="score-badge"><i class="fas fa-star"></i> <span id="scoreValue">0</span></div>
@@ -267,6 +254,10 @@
 
     function loadQuestion(index) {
         const q = questions[index];
+        if (!q) {
+            console.error('Вопрос не найден:', index);
+            return;
+        }
         const container = document.getElementById('questionContainer');
         container.innerHTML = `
             <div class="question">
@@ -366,6 +357,8 @@
         userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, modulesUnlocked: 1, energy: 5, lives: 7 };
         document.getElementById('testTitle').innerHTML = `Тест модуля ${moduleId}`;
         await updateUI();
+        
+        // ✅ ГЛАВНОЕ: загружаем первый вопрос
         loadQuestion(0);
     });
 
@@ -374,9 +367,9 @@
     document.querySelectorAll('.nav-item').forEach(item => {
         item.onclick = () => {
             const page = item.dataset.page;
-            if (page === 'profile') window.location.href = 'profile.html';
-            if (page === 'shop') window.location.href = 'shop.html';
             if (page === 'dashboard') window.location.href = 'dashboard.html';
+            if (page === 'shop') window.location.href = 'shop.html';
+            if (page === 'profile') window.location.href = 'profile.html';
         };
     });
 </script>
