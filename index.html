@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>PyPath — Вход</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 28px;
+            padding: 40px 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: #3B82F6;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-top: 12px;
+            background: linear-gradient(135deg, #3B82F6, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo p {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 60px;
+            margin-bottom: 28px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #3B82F6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .auth-form {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-form.active {
+            display: flex;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .captcha-block {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 8px 0;
+        }
+
+        .captcha-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .captcha-label code {
+            background: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-family: monospace;
+            color: #3B82F6;
+        }
+
+        .captcha-status {
+            font-size: 0.75rem;
+            margin-top: 8px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3B82F6, #1d4ed8);
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .message.success {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .forgot-link {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .forgot-link a {
+            color: #64748b;
+            font-size: 0.8rem;
+            text-decoration: none;
+        }
+
+        .forgot-link a:hover {
+            color: #3B82F6;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo">
+                <i class="fab fa-python"></i>
+                <h1>PyPath</h1>
+                <p>Изучай Python играя</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="login">Вход</button>
+                <button class="tab" data-tab="register">Регистрация</button>
+            </div>
+
+            <form id="loginForm" class="auth-form active">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Пароль" required>
+                </div>
+                <button type="submit" class="btn">Войти</button>
+                <div class="forgot-link">
+                    <a href="#" id="forgotPassword">Забыли пароль?</a>
+                </div>
+            </form>
+
+            <form id="registerForm" class="auth-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="regEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="regPassword" placeholder="Пароль (мин. 6)" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-check-circle"></i>
+                    <input type="password" id="regConfirm" placeholder="Повторите пароль" required>
+                </div>
+                <div class="captcha-block">
+                    <div class="captcha-label">
+                        <i class="fas fa-code"></i>
+                        <span>Напишите код:</span>
+                        <code>print("Hello")</code>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-terminal"></i>
+                        <input type="text" id="captchaInput" placeholder='print("Hello")'>
+                    </div>
+                    <div id="captchaStatus" class="captcha-status"></div>
+                </div>
+                <button type="submit" id="registerBtn" class="btn" disabled>Зарегистрироваться</button>
+            </form>
+
+            <div id="authMessage" class="message"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            auth, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            sendPasswordResetEmail,
+            onAuthStateChanged,
+            doc, setDoc, getDoc,
+            getInitialUserData
+        } from './firebase-config.js';
+
+        // Переключение между вкладками
+        const tabs = document.querySelectorAll('.tab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const authMessage = document.getElementById('authMessage');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                loginForm.classList.toggle('active', tabName === 'login');
+                registerForm.classList.toggle('active', tabName === 'register');
+                authMessage.innerHTML = '';
+                authMessage.className = 'message';
+            });
+        });
+
+        // Капча
+        const captchaInput = document.getElementById('captchaInput');
+        const registerBtn = document.getElementById('registerBtn');
+        const captchaStatus = document.getElementById('captchaStatus');
+
+        if (captchaInput) {
+            captchaInput.addEventListener('input', () => {
+                const value = captchaInput.value.trim();
+                if (value === 'print("Hello")' || value === 'print("Hello")' || value === 'print("Hello")') {
+                    captchaStatus.innerHTML = '<i class="fas fa-check-circle"></i> Верно!';
+                    captchaStatus.style.color = '#16a34a';
+                    registerBtn.disabled = false;
+                } else {
+                    captchaStatus.innerHTML = '<i class="fas fa-times-circle"></i> Неверно. Напишите: print("Hello")';
+                    captchaStatus.style.color = '#dc2626';
+                    registerBtn.disabled = true;
+                }
+            });
+        }
+
+        // Вход
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            authMessage.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Вход...';
+            authMessage.className = 'message';
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                let errorText = 'Ошибка входа';
+                if (error.code === 'auth/invalid-credential') errorText = 'Неверный email или пароль';
+                if (error.code === 'auth/user-not-found') errorText = 'Пользователь не найден';
+                if (error.code === 'auth/wrong-password') errorText = 'Неверный пароль';
+                authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + errorText;
+                authMessage.className = 'message error';
+            }
+        });
+
+        // Регистрация
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+
+            if (password !== confirm) {
+                authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Пароли не совпадают';
+                authMessage.className = 'message error';
+                return;
+            }
+            if (password.length < 6) {
+                authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Пароль должен быть минимум 6 символов';
+                authMessage.className = 'message error';
+                return;
+            }
+
+            authMessage.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Регистрация...';
+            authMessage.className = 'message';
+
+            try {
+                const userCred = await createUserWithEmailAndPassword(auth, email, password);
+                const initialData = getInitialUserData();
+                await setDoc(doc(db, 'users', userCred.user.uid), initialData);
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                let errorText = 'Ошибка регистрации';
+                if (error.code === 'auth/email-already-in-use') errorText = 'Email уже используется';
+                if (error.code === 'auth/invalid-email') errorText = 'Неверный формат email';
+                authMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + errorText;
+                authMessage.className = 'message error';
+            }
+        });
+
+        // Восстановление пароля
+        document.getElementById('forgotPassword')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = prompt('Введите ваш email для восстановления пароля:');
+            if (email) {
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    alert('Ссылка для сброса пароля отправлена на ваш email');
+                } catch (error) {
+                    alert('Ошибка: ' + error.message);
+                }
+            }
+        });
+
+        // Если уже авторизован — сразу на главную
+        onAuthStateChanged(auth, (user) => {
+            if (user && window.location.pathname.includes('index.html')) {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>
