@@ -14,8 +14,6 @@
             line-height: 1.5;
         }
         .app-container { display: flex; min-height: 100vh; }
-        
-        /* Боковая панель */
         .sidebar {
             width: 260px;
             background: #fff;
@@ -49,7 +47,6 @@
             transition: all 0.2s;
         }
         .nav-item:hover { background: #f1f5f9; }
-        .nav-item.active { background: #eef2ff; color: #3B82F6; font-weight: 500; }
         .lives-panel, .energy-panel {
             margin-top: 24px;
             padding-top: 24px;
@@ -74,9 +71,6 @@
         }
         .energy-fill { background: #f59e0b; height: 100%; width: 0%; border-radius: 10px; }
         .energy-text { font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; }
-        .reset-info { font-size: 0.7rem; color: #94a3b8; margin-top: 8px; }
-
-        /* Основной контент */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -101,7 +95,6 @@
             font-weight: 600;
             font-size: 0.9rem;
         }
-        .score-badge i { color: #f59e0b; margin-right: 6px; }
         .avatar {
             width: 40px;
             height: 40px;
@@ -122,8 +115,6 @@
             font-size: 0.9rem;
         }
         .back-btn:hover { color: #3B82F6; }
-
-        /* Прогресс модуля */
         .module-progress {
             background: white;
             border-radius: 20px;
@@ -144,8 +135,6 @@
             border-radius: 4px;
             width: 0%;
         }
-
-        /* Список уроков */
         .lessons-list {
             display: flex;
             flex-direction: column;
@@ -180,7 +169,6 @@
             margin-top: 20px;
         }
         .test-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
-
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
             .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
@@ -192,17 +180,17 @@
     <aside class="sidebar">
         <div class="logo"><i class="fab fa-python"></i><span>PyPath</span></div>
         <nav>
-            <div class="nav-item" data-page="dashboard"><i class="fas fa-chalkboard-user"></i> Учебный план</div>
-            <div class="nav-item" data-page="shop"><i class="fas fa-store"></i> Магазин</div>
-            <div class="nav-item" data-page="profile"><i class="fas fa-user"></i> Мой профиль</div>
+            <div class="nav-item" data-page="dashboard">Учебный план</div>
+            <div class="nav-item" data-page="shop">Магазин</div>
+            <div class="nav-item" data-page="profile">Мой профиль</div>
         </nav>
         <div class="energy-panel">
-            <div class="title">⚡ Энергия</div>
+            <div class="title">ЭНЕРГИЯ</div>
             <div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div>
             <div class="energy-text"><span id="energyCurrent">5</span><span>/5</span></div>
         </div>
         <div class="lives-panel">
-            <div class="title">❤️ Жизни</div>
+            <div class="title">ЖИЗНИ</div>
             <div class="hearts" id="heartsDisplay"></div>
         </div>
     </aside>
@@ -214,9 +202,9 @@
                 <div class="breadcrumb">PyPath → <span id="moduleBreadcrumb">A1</span></div>
             </div>
             <div class="user-actions">
-                <div class="score-badge"><i class="fas fa-star"></i> <span id="scoreValue">0</span></div>
+                <div class="score-badge"><span id="scoreValue">0</span> очков</div>
                 <div class="avatar" id="avatarBtn">M</div>
-                <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Назад</button>
+                <button class="back-btn" id="backBtn">Назад</button>
             </div>
         </div>
 
@@ -227,7 +215,7 @@
         </div>
 
         <div class="lessons-list" id="lessonsList"></div>
-        <button class="test-btn" id="testBtn">📝 Пройти тест модуля</button>
+        <button class="test-btn" id="testBtn">Пройти тест модуля</button>
     </main>
 </div>
 
@@ -247,18 +235,23 @@
     let userData = null;
 
     async function updateUI() {
+        if (!currentUser) return;
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        userData = userSnap.data();
         if (!userData) return;
+        
         document.getElementById('scoreValue').innerText = userData.totalScore || 0;
         
-        const energy = userData.energy || 5;
+        const energy = userData.energy !== undefined ? userData.energy : 5;
         document.getElementById('energyFill').style.width = (energy / 5) * 100 + '%';
         document.getElementById('energyCurrent').innerText = energy;
         
-        const lives = userData.lives || 7;
+        const lives = userData.lives !== undefined ? userData.lives : 7;
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let html = '';
-            for (let i = 0; i < Math.min(lives, 7); i++) html += '<i class="fas fa-heart"></i>';
+            for (let i = 0; i < lives; i++) html += '<i class="fas fa-heart"></i>';
             for (let i = lives; i < 7; i++) html += '<i class="far fa-heart"></i>';
             heartsContainer.innerHTML = html;
         }
@@ -292,7 +285,7 @@
             card.innerHTML = `
                 <div class="lesson-info">
                     <h4>Урок ${i}: ${theory.title || 'Новый урок'}</h4>
-                    <div class="lesson-status">${isCompleted ? '✅ Пройден' : (isAvailable ? '🔓 Доступен' : '🔒 Заблокирован')}</div>
+                    <div class="lesson-status">${isCompleted ? 'Пройден' : (isAvailable ? 'Доступен' : 'Заблокирован')}</div>
                 </div>
                 <i class="fas fa-chevron-right"></i>
             `;
@@ -306,9 +299,6 @@
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = 'index.html'; return; }
         currentUser = user;
-        const userRef = doc(db, 'users', user.uid);
-        const userSnap = await getDoc(userRef);
-        userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, completedLessons: [], modulesUnlocked: 1, energy: 5, lives: 7 };
         await updateUI();
     });
     

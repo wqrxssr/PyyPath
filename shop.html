@@ -14,8 +14,6 @@
             line-height: 1.5;
         }
         .app-container { display: flex; min-height: 100vh; }
-        
-        /* Боковая панель */
         .sidebar {
             width: 260px;
             background: #fff;
@@ -74,8 +72,6 @@
         }
         .energy-fill { background: #f59e0b; height: 100%; width: 0%; border-radius: 10px; }
         .energy-text { font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; }
-
-        /* Основной контент */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -97,7 +93,6 @@
             font-weight: 600;
             font-size: 0.9rem;
         }
-        .score-badge i { color: #f59e0b; margin-right: 6px; }
         .avatar {
             width: 40px;
             height: 40px;
@@ -118,8 +113,6 @@
             font-size: 0.9rem;
         }
         .back-btn:hover { color: #3B82F6; }
-
-        /* Магазин */
         .shop-card {
             background: white;
             border-radius: 24px;
@@ -133,7 +126,6 @@
         .shop-title i { font-size: 3rem; color: #f59e0b; margin-bottom: 12px; display: block; }
         .shop-title h2 { font-size: 1.3rem; }
         .shop-title p { color: #64748b; margin-top: 8px; }
-        
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -174,7 +166,6 @@
         }
         .btn-buy:hover { background: #2563eb; transform: translateY(-2px); }
         .btn-buy:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
-        
         .current-resources {
             background: #f1f5f9;
             border-radius: 16px;
@@ -188,7 +179,6 @@
         .resource-item i.fa-bolt { color: #f59e0b; }
         .resource-item i.fa-heart { color: #ef4444; }
         .resource-item span { font-weight: 700; font-size: 1.1rem; }
-
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
             .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
@@ -200,17 +190,17 @@
     <aside class="sidebar">
         <div class="logo"><i class="fab fa-python"></i><span>PyPath</span></div>
         <nav>
-            <div class="nav-item" data-page="dashboard"><i class="fas fa-chalkboard-user"></i> Учебный план</div>
-            <div class="nav-item active" data-page="shop"><i class="fas fa-store"></i> Магазин</div>
-            <div class="nav-item" data-page="profile"><i class="fas fa-user"></i> Мой профиль</div>
+            <div class="nav-item" data-page="dashboard">Учебный план</div>
+            <div class="nav-item active" data-page="shop">Магазин</div>
+            <div class="nav-item" data-page="profile">Мой профиль</div>
         </nav>
         <div class="energy-panel">
-            <div class="title">⚡ Энергия</div>
+            <div class="title">ЭНЕРГИЯ</div>
             <div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div>
             <div class="energy-text"><span id="energyCurrent">5</span><span>/5</span></div>
         </div>
         <div class="lives-panel">
-            <div class="title">❤️ Жизни</div>
+            <div class="title">ЖИЗНИ</div>
             <div class="hearts" id="heartsDisplay"></div>
         </div>
     </aside>
@@ -221,9 +211,9 @@
                 <h1>Магазин</h1>
             </div>
             <div class="user-actions">
-                <div class="score-badge"><i class="fas fa-star"></i> <span id="scoreValue">0</span></div>
+                <div class="score-badge"><span id="scoreValue">0</span> очков</div>
                 <div class="avatar" id="avatarBtn">M</div>
-                <button class="back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Назад</button>
+                <button class="back-btn" id="backBtn">Назад</button>
             </div>
         </div>
 
@@ -239,22 +229,22 @@
                     <div class="product-icon"><i class="fas fa-bolt"></i></div>
                     <div class="product-title">Энергия +1</div>
                     <div class="product-desc">Восполняет 1 единицу энергии. Максимум — 5.</div>
-                    <div class="product-price"><i class="fas fa-star"></i> 30 очков</div>
+                    <div class="product-price">30 очков</div>
                     <button class="btn-buy" id="buyEnergyBtn">Купить</button>
                 </div>
                 <div class="product-card">
                     <div class="product-icon"><i class="fas fa-heart"></i></div>
                     <div class="product-title">Жизнь +1</div>
                     <div class="product-desc">Восполняет 1 жизнь. Максимум — 7.</div>
-                    <div class="product-price"><i class="fas fa-star"></i> 60 очков</div>
+                    <div class="product-price">60 очков</div>
                     <button class="btn-buy" id="buyLifeBtn">Купить</button>
                 </div>
             </div>
 
             <div class="current-resources">
-                <div class="resource-item"><i class="fas fa-bolt"></i> Энергия: <span id="currentEnergy">5</span>/5</div>
-                <div class="resource-item"><i class="fas fa-heart"></i> Жизни: <span id="currentLives">7</span>/7</div>
-                <div class="resource-item"><i class="fas fa-star"></i> Очки: <span id="currentScore">0</span></div>
+                <div class="resource-item">Энергия: <span id="currentEnergy">5</span>/5</div>
+                <div class="resource-item">Жизни: <span id="currentLives">7</span>/7</div>
+                <div class="resource-item">Очки: <span id="currentScore">0</span></div>
             </div>
         </div>
     </main>
@@ -286,10 +276,15 @@
     }
 
     async function updateUI() {
+        if (!currentUser) return;
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        userData = userSnap.data();
         if (!userData) return;
+        
         const score = userData.totalScore || 0;
-        const energy = userData.energy || 5;
-        const lives = userData.lives || 7;
+        const energy = userData.energy !== undefined ? userData.energy : 5;
+        const lives = userData.lives !== undefined ? userData.lives : 7;
         
         document.getElementById('scoreValue').innerText = score;
         document.getElementById('currentScore').innerText = score;
@@ -302,7 +297,7 @@
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let html = '';
-            for (let i = 0; i < Math.min(lives, 7); i++) html += '<i class="fas fa-heart"></i>';
+            for (let i = 0; i < lives; i++) html += '<i class="fas fa-heart"></i>';
             for (let i = lives; i < 7; i++) html += '<i class="far fa-heart"></i>';
             heartsContainer.innerHTML = html;
         }
@@ -315,36 +310,33 @@
 
     async function buyEnergy() {
         const score = userData.totalScore || 0;
-        const energy = userData.energy || 5;
-        if (score < 30) { showNotification('❌ Недостаточно очков!', true); return; }
-        if (energy >= 5) { showNotification('❌ Энергия уже полна!', true); return; }
+        const energy = userData.energy !== undefined ? userData.energy : 5;
+        if (score < 30) { showNotification('Недостаточно очков!', true); return; }
+        if (energy >= 5) { showNotification('Энергия уже полна!', true); return; }
         userData.totalScore = score - 30;
-        userData.energy = Math.min(5, energy + 1);
+        userData.energy = energy + 1;
         const userRef = doc(db, 'users', currentUser.uid);
         await updateDoc(userRef, { totalScore: userData.totalScore, energy: userData.energy });
-        showNotification('✅ +1 энергия!');
+        showNotification('+1 энергия!');
         await updateUI();
     }
 
     async function buyLife() {
         const score = userData.totalScore || 0;
-        const lives = userData.lives || 7;
-        if (score < 60) { showNotification('❌ Недостаточно очков!', true); return; }
-        if (lives >= 7) { showNotification('❌ Жизни уже полны!', true); return; }
+        const lives = userData.lives !== undefined ? userData.lives : 7;
+        if (score < 60) { showNotification('Недостаточно очков!', true); return; }
+        if (lives >= 7) { showNotification('Жизни уже полны!', true); return; }
         userData.totalScore = score - 60;
-        userData.lives = Math.min(7, lives + 1);
+        userData.lives = lives + 1;
         const userRef = doc(db, 'users', currentUser.uid);
         await updateDoc(userRef, { totalScore: userData.totalScore, lives: userData.lives });
-        showNotification('✅ +1 жизнь!');
+        showNotification('+1 жизнь!');
         await updateUI();
     }
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = 'index.html'; return; }
         currentUser = user;
-        const userRef = doc(db, 'users', user.uid);
-        const userSnap = await getDoc(userRef);
-        userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, energy: 5, lives: 7 };
         await updateUI();
     });
 

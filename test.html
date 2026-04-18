@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -14,8 +14,6 @@
             line-height: 1.5;
         }
         .app-container { display: flex; min-height: 100vh; }
-        
-        /* Боковая панель */
         .sidebar {
             width: 260px;
             background: #fff;
@@ -49,7 +47,6 @@
             transition: all 0.2s;
         }
         .nav-item:hover { background: #f1f5f9; }
-        .nav-item.active { background: #eef2ff; color: #3B82F6; font-weight: 500; }
         .energy-panel, .lives-panel {
             margin-top: 24px;
             padding-top: 24px;
@@ -73,8 +70,6 @@
         }
         .energy-fill { background: #f59e0b; height: 100%; width: 0%; border-radius: 10px; }
         .energy-text { font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; }
-
-        /* Основной контент */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -96,7 +91,6 @@
             font-weight: 600;
             font-size: 0.9rem;
         }
-        .score-badge i { color: #f59e0b; margin-right: 6px; }
         .avatar {
             width: 40px;
             height: 40px;
@@ -117,8 +111,6 @@
             font-size: 0.9rem;
         }
         .back-btn:hover { color: #3B82F6; }
-
-        /* Тест */
         .test-card {
             background: white;
             border-radius: 24px;
@@ -269,7 +261,6 @@
     let userAnswers = new Array(questions.length).fill(null);
     let currentIndex = 0;
 
-    // Проверка, все ли уроки модуля пройдены
     function areAllLessonsCompleted() {
         if (!userData) return false;
         const completed = userData.completedLessons || [];
@@ -281,12 +272,17 @@
     }
 
     async function updateUI() {
+        if (!currentUser) return;
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        userData = userSnap.data();
         if (!userData) return;
+        
         document.getElementById('scoreValue').innerText = userData.totalScore || 0;
-        const energy = userData.energy || 5;
+        const energy = userData.energy !== undefined ? userData.energy : 5;
         document.getElementById('energyFill').style.width = (energy / 5) * 100 + '%';
         document.getElementById('energyCurrent').innerText = energy;
-        const lives = userData.lives || 7;
+        const lives = userData.lives !== undefined ? userData.lives : 7;
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let html = '';
@@ -439,11 +435,8 @@
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = 'index.html'; return; }
         currentUser = user;
-        const userRef = doc(db, 'users', user.uid);
-        const userSnap = await getDoc(userRef);
-        userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, modulesUnlocked: 1, energy: 5, lives: 7, completedLessons: [] };
-        document.getElementById('testTitle').innerHTML = `Тест модуля ${moduleId}`;
         await updateUI();
+        document.getElementById('testTitle').innerHTML = `Тест модуля ${moduleId}`;
         renderTest();
     });
 

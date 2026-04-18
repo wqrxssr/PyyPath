@@ -21,7 +21,6 @@
             display: flex;
             min-height: 100vh;
         }
-        /* ============ БОКОВАЯ ПАНЕЛЬ ============ */
         .sidebar {
             width: 260px;
             background: #fff;
@@ -43,7 +42,6 @@
         }
         .logo i { color: #3B82F6; font-size: 1.8rem; }
         .logo span { background: linear-gradient(135deg, #3B82F6, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        
         .nav-item {
             display: flex;
             align-items: center;
@@ -57,8 +55,6 @@
         }
         .nav-item:hover { background: #f1f5f9; }
         .nav-item.active { background: #eef2ff; color: #3B82F6; font-weight: 500; }
-        .nav-item i { width: 20px; }
-        
         .lives-panel, .energy-panel {
             margin-top: 24px;
             padding-top: 24px;
@@ -94,8 +90,6 @@
             justify-content: space-between;
         }
         .reset-info { font-size: 0.7rem; color: #94a3b8; margin-top: 8px; }
-
-        /* ============ ОСНОВНОЙ КОНТЕНТ ============ */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -133,8 +127,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-
-        /* Статистика */
         .stats-grid {
             display: flex;
             gap: 24px;
@@ -169,8 +161,6 @@
             border-radius: 2px;
             width: 0%;
         }
-
-        /* Карточка продолжения */
         .continue-card {
             background: #f8fafc;
             border-radius: 16px;
@@ -199,8 +189,6 @@
             color: #475569;
             cursor: pointer;
         }
-
-        /* Модули */
         .section-title {
             font-size: 1rem;
             font-weight: 600;
@@ -226,8 +214,6 @@
         .module-icon { font-size: 1.5rem; margin-bottom: 12px; }
         .module-card h3 { font-size: 1rem; margin-bottom: 8px; }
         .module-card p { font-size: 0.75rem; color: #64748b; }
-
-        /* Две колонки */
         .two-columns {
             display: flex;
             gap: 24px;
@@ -272,7 +258,6 @@
         .habit-card h3 { font-size: 0.9rem; margin-bottom: 4px; }
         .habit-card p { font-size: 0.75rem; color: #92400e; }
         .habit-bonus { font-size: 1.2rem; font-weight: bold; color: #d97706; }
-
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
             .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
@@ -284,18 +269,18 @@
     <aside class="sidebar">
         <div class="logo"><i class="fab fa-python"></i><span>PyPath</span></div>
         <nav>
-            <div class="nav-item active" data-page="dashboard"><i class="fas fa-chalkboard-user"></i> Учебный план</div>
-            <div class="nav-item" data-page="shop"><i class="fas fa-store"></i> Магазин</div>
-            <div class="nav-item" data-page="profile"><i class="fas fa-user"></i> Мой профиль</div>
+            <div class="nav-item active" data-page="dashboard">Учебный план</div>
+            <div class="nav-item" data-page="shop">Магазин</div>
+            <div class="nav-item" data-page="profile">Мой профиль</div>
         </nav>
         <div class="energy-panel">
-            <div class="title">⚡ Энергия</div>
-            <div class="energy-bar"><div class="energy-fill" id="energyFill" style="width: 100%"></div></div>
+            <div class="title">ЭНЕРГИЯ</div>
+            <div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div>
             <div class="energy-text"><span id="energyCurrent">5</span><span>/5</span></div>
             <div class="reset-info" id="energyTimer">Восстановление: полна</div>
         </div>
         <div class="lives-panel">
-            <div class="title">❤️ Осталось жизней</div>
+            <div class="title">ЖИЗНИ</div>
             <div class="hearts" id="heartsDisplay"></div>
             <div class="reset-info">Сброс настроек через 24 часа</div>
         </div>
@@ -308,7 +293,7 @@
                 <div class="breadcrumb">PyPath → Учебный план</div>
             </div>
             <div class="user-actions">
-                <div class="score-badge"><i class="fas fa-star"></i> <span id="scoreValue">0</span></div>
+                <div class="score-badge"><span id="scoreValue">0</span> очков</div>
                 <div class="avatar" id="avatarBtn">M</div>
             </div>
         </div>
@@ -342,18 +327,18 @@
 
         <div class="two-columns">
             <div class="column">
-                <h3><i class="fas fa-tasks"></i> Ежедневные задания</h3>
+                <h3>Ежедневные задания</h3>
                 <div id="dailyQuestsList"></div>
             </div>
             <div class="column">
-                <h3><i class="fas fa-calendar-day"></i> Проблема дня</h3>
+                <h3>Проблема дня</h3>
                 <div id="problemOfDay"></div>
             </div>
         </div>
 
         <div class="habit-card">
             <div>
-                <h3>📅 Давайте выработаем привычку!</h3>
+                <h3>Давайте выработаем привычку!</h3>
                 <p>Каждая решенная задача продлевает серию. Продержитесь 3 дня!</p>
             </div>
             <div class="habit-bonus">+15-30</div>
@@ -362,12 +347,10 @@
 </div>
 
 <script type="module">
-    import { auth, db, doc, getDoc, updateDoc, onAuthStateChanged, signOut } from './firebase-config.js';
+    import { auth, db, doc, getDoc, updateDoc, onAuthStateChanged } from './firebase-config.js';
     import { getTheory } from './theory.js';
-    import { getLesson } from './lessons.js';
     import { getRandomProblem } from './daily.js';
 
-    // Данные модулей
     const modules = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'C3'];
     const moduleNames = {
         A1: 'Первые шаги в Python', A2: 'Условный оператор', B1: 'Циклы',
@@ -381,40 +364,34 @@
     let currentUser = null;
     let userData = null;
 
-    // Функция обновления UI
-    function updateUI() {
+    async function updateUI() {
+        if (!currentUser) return;
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        userData = userSnap.data();
         if (!userData) return;
-        
-        // Очки
+
         document.getElementById('scoreValue').innerText = userData.totalScore || 0;
-        
-        // Стрейк
         document.getElementById('streakValue').innerText = userData.streak || 0;
-        
-        // Изученные темы
+
         const completedCount = userData.completedLessons?.length || 0;
-        const totalLessons = 99;
-        const percent = Math.round((completedCount / totalLessons) * 100);
+        const percent = Math.round((completedCount / 99) * 100);
         document.getElementById('topicsDone').innerText = completedCount;
         document.getElementById('topicsProgress').style.width = percent + '%';
-        
-        // Жизни
-        const lives = userData.lives || 5;
+
+        const energy = userData.energy !== undefined ? userData.energy : 5;
+        document.getElementById('energyFill').style.width = (energy / 5) * 100 + '%';
+        document.getElementById('energyCurrent').innerText = energy;
+
+        const lives = userData.lives !== undefined ? userData.lives : 7;
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let heartsHtml = '';
-            for (let i = 0; i < Math.min(lives, 7); i++) heartsHtml += '<i class="fas fa-heart"></i>';
+            for (let i = 0; i < lives; i++) heartsHtml += '<i class="fas fa-heart"></i>';
             for (let i = lives; i < 7; i++) heartsHtml += '<i class="far fa-heart"></i>';
             heartsContainer.innerHTML = heartsHtml;
         }
-        
-        // Энергия
-        const energy = userData.energy || 5;
-        const energyPercent = (energy / 5) * 100;
-        document.getElementById('energyFill').style.width = energyPercent + '%';
-        document.getElementById('energyCurrent').innerText = energy;
-        
-        // Таймер энергии
+
         const energyTimer = document.getElementById('energyTimer');
         if (energy < 5 && userData.lastEnergyUpdate) {
             const nextTime = userData.lastEnergyUpdate + 3600000;
@@ -429,18 +406,15 @@
         } else {
             energyTimer.innerText = 'Восстановление: полна';
         }
-        
-        // Модули
+
         renderModules();
-        
-        // Следующий урок
         const nextLesson = findNextLesson();
         if (nextLesson) {
             const theory = getTheory(nextLesson.id);
             document.getElementById('nextLessonTitle').innerText = theory.title || 'Новый урок';
         }
     }
-    
+
     function findNextLesson() {
         if (!userData) return null;
         const completed = userData.completedLessons || [];
@@ -456,14 +430,14 @@
         }
         return null;
     }
-    
+
     function renderModules() {
         const grid = document.getElementById('modulesGrid');
         if (!grid || !userData) return;
         grid.innerHTML = '';
         const unlocked = userData.modulesUnlocked || 1;
         const completed = userData.completedLessons || [];
-        
+
         for (let i = 0; i < modules.length; i++) {
             const mod = modules[i];
             const isUnlocked = i < unlocked;
@@ -483,7 +457,7 @@
             grid.appendChild(card);
         }
     }
-    
+
     function renderDailyQuests() {
         const container = document.getElementById('dailyQuestsList');
         if (!container || !userData) return;
@@ -498,14 +472,13 @@
             </div>
         `).join('');
     }
-    
+
     function renderProblemOfDay() {
         const container = document.getElementById('problemOfDay');
         if (!container) return;
         const problem = getRandomProblem();
         container.innerHTML = `
             <div style="text-align:center; padding: 16px 0;">
-                <i class="fas fa-code" style="font-size:2rem; color:#3B82F6;"></i>
                 <p style="margin: 12px 0;">${problem.text}</p>
                 <div class="timer">Следующая проблема через ${Math.floor(Math.random() * 24)}ч ${Math.floor(Math.random() * 60)}м</div>
                 <button class="btn-primary" style="margin-top: 16px; width:100%;" id="solveProblemBtn">Решить задачу</button>
@@ -515,8 +488,7 @@
             alert('Решение проблем дня (будет в следующей версии)');
         });
     }
-    
-    // Аутентификация и загрузка данных
+
     onAuthStateChanged(auth, async (user) => {
         if (!user) {
             window.location.href = 'index.html';
@@ -525,7 +497,7 @@
         currentUser = user;
         const userRef = doc(db, 'users', user.uid);
         const userSnap = await getDoc(userRef);
-        
+
         if (userSnap.exists()) {
             userData = userSnap.data();
         } else {
@@ -548,8 +520,7 @@
             };
             await updateDoc(userRef, userData);
         }
-        
-        // Обновляем ресурсы
+
         const now = Date.now();
         const energyPassed = Math.floor((now - (userData.lastEnergyUpdate || now)) / 3600000);
         if (energyPassed > 0) {
@@ -557,19 +528,18 @@
             userData.lastEnergyUpdate = now;
             await updateDoc(userRef, userData);
         }
-        
+
         const lifePassed = Math.floor((now - (userData.lastLifeUpdate || now)) / 1800000);
         if (lifePassed > 0) {
             userData.lives = Math.min(7, (userData.lives || 7) + lifePassed);
             userData.lastLifeUpdate = now;
             await updateDoc(userRef, userData);
         }
-        
-        updateUI();
+
+        await updateUI();
         renderDailyQuests();
         renderProblemOfDay();
-        
-        // Обработчики кнопок
+
         document.getElementById('continueBtn').onclick = () => {
             const next = findNextLesson();
             if (next) {
@@ -578,11 +548,11 @@
                 alert('Поздравляем! Вы прошли все уроки!');
             }
         };
-        
+
         document.getElementById('avatarBtn').onclick = () => {
             window.location.href = 'profile.html';
         };
-        
+
         document.querySelectorAll('.nav-item').forEach(item => {
             item.onclick = () => {
                 const page = item.dataset.page;

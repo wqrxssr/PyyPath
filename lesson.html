@@ -84,7 +84,6 @@
             font-weight: 600;
             font-size: 0.9rem;
         }
-        .score-badge i { color: #f59e0b; margin-right: 6px; }
         .avatar {
             width: 40px;
             height: 40px;
@@ -105,8 +104,6 @@
             font-size: 0.9rem;
         }
         .back-btn:hover { color: #3B82F6; }
-
-        /* Контент урока */
         .lesson-card {
             background: white;
             border-radius: 24px;
@@ -160,7 +157,6 @@
             margin: 16px 0;
             color: #92400e;
         }
-        /* IDE-стиль для поля ввода кода */
         .code-editor {
             background: #1e1e2e;
             border-radius: 12px;
@@ -292,12 +288,17 @@
     let currentTask = null;
 
     async function updateUI() {
+        if (!currentUser) return;
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        userData = userSnap.data();
         if (!userData) return;
+        
         document.getElementById('scoreValue').innerText = userData.totalScore || 0;
-        const energy = userData.energy || 5;
+        const energy = userData.energy !== undefined ? userData.energy : 5;
         document.getElementById('energyFill').style.width = (energy / 5) * 100 + '%';
         document.getElementById('energyCurrent').innerText = energy;
-        const lives = userData.lives || 7;
+        const lives = userData.lives !== undefined ? userData.lives : 7;
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let html = '';
@@ -331,7 +332,7 @@
         userData.lives = Math.min(7, (userData.lives || 7) + 1);
         const userRef = doc(db, 'users', currentUser.uid);
         await updateDoc(userRef, userData);
-        updateUI();
+        await updateUI();
         showMessage(`Урок пройден! +10 очков, +1 жизнь`, 'success');
         setTimeout(() => window.location.href = `module.html?module=${moduleId}`, 2000);
     }
@@ -382,7 +383,7 @@
         }
     }
 
-    document.getElementById('checkBtn').onclick = () => {
+    document.getElementById('checkBtn').onclick = async () => {
         let isCorrect = false;
         if (currentTask.type === 'code') {
             const answer = document.getElementById('answerInput')?.value || '';
@@ -401,7 +402,9 @@
             completeLesson();
         } else {
             userData.lives = Math.max(0, (userData.lives || 7) - 1);
-            updateUI();
+            const userRef = doc(db, 'users', currentUser.uid);
+            await updateDoc(userRef, { lives: userData.lives });
+            await updateUI();
             showMessage(`Неправильно. Осталось жизней: ${userData.lives}`, 'error');
             if (userData.lives <= 0) {
                 showMessage('Жизни кончились. Возвращаемся к модулю.', 'error');
@@ -413,9 +416,6 @@
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = 'index.html'; return; }
         currentUser = user;
-        const userRef = doc(db, 'users', user.uid);
-        const userSnap = await getDoc(userRef);
-        userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, completedLessons: [], energy: 5, lives: 7 };
         await updateUI();
         renderTheory();
         renderTask();

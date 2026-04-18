@@ -14,7 +14,6 @@
             line-height: 1.5;
         }
         .app-container { display: flex; min-height: 100vh; }
-        
         .sidebar {
             width: 260px;
             background: #fff;
@@ -71,7 +70,6 @@
         }
         .energy-fill { background: #f59e0b; height: 100%; width: 0%; border-radius: 10px; }
         .energy-text { font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between; }
-
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -113,7 +111,6 @@
             font-size: 0.9rem;
         }
         .back-btn:hover { color: #3B82F6; }
-
         .profile-card {
             background: white;
             border-radius: 24px;
@@ -150,7 +147,6 @@
         .stat-card i { font-size: 1.5rem; margin-bottom: 8px; display: block; color: #3B82F6; }
         .stat-card .value { font-size: 1.5rem; font-weight: 700; margin: 8px 0; }
         .stat-card .label { font-size: 0.8rem; color: #64748b; }
-        
         .achievements-list {
             text-align: left;
             margin: 24px 0;
@@ -173,7 +169,6 @@
         .achievement-item .status { font-size: 1.1rem; }
         .achievement-item .status.completed { color: #10b981; }
         .achievement-item .status.locked { color: #94a3b8; }
-        
         .setting {
             display: flex;
             justify-content: space-between;
@@ -212,7 +207,6 @@
         }
         input:checked + .slider { background-color: #3B82F6; }
         input:checked + .slider:before { transform: translateX(26px); }
-        
         .btn {
             background: #3B82F6;
             border: none;
@@ -228,7 +222,6 @@
         .btn:hover { background: #2563eb; transform: translateY(-1px); }
         .btn-danger { background: #ef4444; }
         .btn-danger:hover { background: #dc2626; }
-        
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); position: fixed; z-index: 100; }
             .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
@@ -373,7 +366,12 @@
     }
 
     async function updateUI() {
+        if (!currentUser) return;
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        userData = userSnap.data();
         if (!userData) return;
+        
         const score = userData.totalScore || 0;
         const completed = userData.completedLessons?.length || 0;
         
@@ -386,11 +384,11 @@
         const rank = getRank(score);
         document.getElementById('rankName').innerHTML = rank.name;
         
-        const energy = userData.energy || 5;
+        const energy = userData.energy !== undefined ? userData.energy : 5;
         document.getElementById('energyFill').style.width = (energy / 5) * 100 + '%';
         document.getElementById('energyCurrent').innerText = energy;
         
-        const lives = userData.lives || 7;
+        const lives = userData.lives !== undefined ? userData.lives : 7;
         const heartsContainer = document.getElementById('heartsDisplay');
         if (heartsContainer) {
             let html = '';
@@ -418,9 +416,6 @@
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = 'index.html'; return; }
         currentUser = user;
-        const userRef = doc(db, 'users', user.uid);
-        const userSnap = await getDoc(userRef);
-        userData = userSnap.exists() ? userSnap.data() : { totalScore: 0, completedLessons: [], energy: 5, lives: 7, maxStreak: 0, goldenCrowns: [] };
         await updateUI();
     });
 
@@ -439,7 +434,7 @@
         if ((userData.totalScore || 0) >= 8000) {
             alert('СЕРТИФИКАТ\n\nPyPath\n\nПоздравляем с окончанием курса Python!');
         } else {
-            alert('Сертификат доступен после достижения 8000 очков');
+            alert('67 Сертификат доступен после достижения 8000 очков');
         }
     };
     document.getElementById('soundToggle').onchange = async (e) => {
